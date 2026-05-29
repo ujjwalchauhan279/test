@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 
 <body>
@@ -21,25 +22,32 @@
             </div>
         </div>
 
-        <div class="progress-container">
-            <div id="progress">
-                <span></span>
-            </div>
-            <div class="time">
-                <span id="current"></span>
-                <span id="final"></span>
-            </div>
-        </div>
 
         <div class="controls">
-            <button id="prev"><i class="fa-solid fa-backward-step"></i></button>
-            <button id="play"><i class="fa-solid fa-play"></i></button>
-            <button id="next"><i class="fa-solid fa-forward-step"></i></button>
-            <div class="volume-container">
-                <div id="volume">
-                    <span></span>
+
+            <!-- progress top -->
+            <div class="progress-wrapper">
+                <div class="progress-container">
+                    <div id="progress">
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="time">
+                    <span id="current"></span>
+                    <span id="final"></span>
                 </div>
             </div>
+
+            <!-- buttons bottom -->
+            <div class="buttons">
+                <button id="shuffle"><i class="fa-solid fa-shuffle"></i></button>
+                <button id="prev"><i class="fa-solid fa-backward-step"></i></button>
+                <button id="play"><i class="fa-solid fa-play"></i></button>
+                <button id="next"><i class="fa-solid fa-forward-step"></i></button>
+                <button id="repeat"><span class="material-symbols-outlined" style="font-weight: 400;">repeat</span></button>
+            </div>
+
         </div>
 
     </div>
