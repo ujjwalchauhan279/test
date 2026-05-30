@@ -9,6 +9,7 @@ let slide = document.querySelector(".progress-container");
 let banner = document.getElementById("Banner");
 let shuffle = document.getElementById("shuffle");
 let repeat = document.getElementById("repeat");
+const thumb = document.querySelector("#progress span");
 
 let songs = [
     { name: "Khuda Bhi", path: "music/Khuda Bhi.mp3", image: "image/Khuda Bhi.webp" },
@@ -92,16 +93,6 @@ audio.addEventListener("loadedmetadata", function () {
     final.innerText = `${finalMin}:${finalSec}`;
 });
 
-
-slide.addEventListener("click", function (val) {
-    const rect = slide.getBoundingClientRect();
-    let value = val.clientX - rect.left;
-    let progressValue = (value / slide.clientWidth) * 100;
-    progress.style.width = progressValue + "%";
-    audio.currentTime = (progressValue / 100) * audio.duration;
-});
-
-
 //*******Shuffle logic********//
 let shuffleMode = 0;
 shuffle.addEventListener("click", function () {
@@ -120,7 +111,7 @@ repeat.addEventListener("click", function () {
     repeatMode++;
 
     if (repeatMode > 2) repeatMode = 0;
-
+    
     if (repeatMode === 0) {
         repeat.innerHTML = `<span class="material-symbols-outlined" style="font-weight: 499;">repeat</span>`;
     }
@@ -132,7 +123,7 @@ repeat.addEventListener("click", function () {
     }
 });
 
-//********Active Shuffle & Repeat*********/
+//********Active Shuffle & Repeat*********//
 audio.addEventListener("ended", function () {
     if (shuffleMode === 1 && repeatMode != 2) {
         let randomIndex;
@@ -144,7 +135,7 @@ audio.addEventListener("ended", function () {
         loadSong();
         audio.play();
     }
-
+    
     else if (shuffleMode === 0 && repeatMode === 0) {
         if (index < songs.length - 1) {
             index++;
@@ -167,6 +158,40 @@ audio.addEventListener("ended", function () {
         audio.play();
     }
 });
+
+//********* Click to Seek **********//
+slide.addEventListener("click", function (val) {
+    thumb.classList.remove("active");
+    const rect = slide.getBoundingClientRect();
+    let value = val.clientX - rect.left;
+    let progressValue = (value / slide.clientWidth) * 100;
+    progress.style.width = progressValue + "%";
+    audio.currentTime = (progressValue / 100) * audio.duration;
+});
+
+//********* Slide to Seek **********//
+let dragging = false;
+slide.addEventListener("pointerdown", function () {
+    dragging = true;
+    thumb.classList.add("active");
+});
+
+document.addEventListener("pointermove", function (val) {
+    if (!dragging) return;
+    const rect = slide.getBoundingClientRect();
+    let value = val.clientX - rect.left;
+    let progressValue = (value / slide.clientWidth) * 100;
+    progressValue = Math.max(0, progressValue);
+    progressValue = Math.min(100, progressValue);
+    progress.style.width = progressValue + "%";
+});
+
+document.addEventListener("pointerup", function () {
+    dragging = false;
+    audio.currentTime = (progressValue / 100) * audio.duration;
+    thumb.classList.remove("active");
+});
+
 
 
 
