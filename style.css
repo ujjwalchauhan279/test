@@ -212,6 +212,16 @@ body {
     font-size: clamp(12px, 3vw, 14px);
 }
 
+.progress-container,
+#progress,
+#progress span {
+    touch-action: none;
+}
+
+#progress span {
+    pointer-events: none;
+}
+
 /* .volume-container{
     position: relative;
     width: 100%;

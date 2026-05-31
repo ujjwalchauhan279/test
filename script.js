@@ -72,6 +72,8 @@ prev.addEventListener("click", function () {
 
 //progress bar
 audio.addEventListener("timeupdate", function () {
+    if (dragging) return;
+
     let progressValue = (audio.currentTime / audio.duration) * 100;
 
     //current Time in minutes and seconds
@@ -111,7 +113,7 @@ repeat.addEventListener("click", function () {
     repeatMode++;
 
     if (repeatMode > 2) repeatMode = 0;
-    
+
     if (repeatMode === 0) {
         repeat.innerHTML = `<span class="material-symbols-outlined" style="font-weight: 499;">repeat</span>`;
     }
@@ -135,7 +137,7 @@ audio.addEventListener("ended", function () {
         loadSong();
         audio.play();
     }
-    
+
     else if (shuffleMode === 0 && repeatMode === 0) {
         if (index < songs.length - 1) {
             index++;
@@ -171,8 +173,10 @@ slide.addEventListener("click", function (val) {
 
 //********* Slide to Seek **********//
 let dragging = false;
-slide.addEventListener("pointerdown", function () {
+let seekTime = 0;
+slide.addEventListener("pointerdown", function (e) {
     dragging = true;
+    slide.setPointerCapture(e.pointerId);
     thumb.classList.add("active");
 });
 
@@ -184,11 +188,14 @@ document.addEventListener("pointermove", function (val) {
     progressValue = Math.max(0, progressValue);
     progressValue = Math.min(100, progressValue);
     progress.style.width = progressValue + "%";
+    seekTime = (progressValue / 100) * audio.duration;
 });
 
-document.addEventListener("pointerup", function () {
+document.addEventListener("pointerup", function (val) {
+    if (!dragging) return;
+    audio.currentTime = seekTime;
+
     dragging = false;
-    audio.currentTime = (progressValue / 100) * audio.duration;
     thumb.classList.remove("active");
 });
 
