@@ -23,7 +23,7 @@ let songs = [
 let index = 0;
 let audio = new Audio();
 
-//play & pause
+//********* play & pause *********//
 let playing = false;
 play.addEventListener("click", function () {
     name.textContent = songs[index].name;
@@ -39,8 +39,7 @@ play.addEventListener("click", function () {
     playing = !playing;
 });
 
-
-//loadSong from array of object
+//********* loadSong from array of object *********//
 function loadSong() {
     audio.pause();
     audio.src = songs[index].path;
@@ -49,8 +48,7 @@ function loadSong() {
 }
 loadSong();
 
-
-//next song
+//********* next song *********//
 next.addEventListener("click", function () {
     index++;
     if (index >= songs.length) index = 0;
@@ -60,7 +58,7 @@ next.addEventListener("click", function () {
     audio.play();
 });
 
-//previous song
+//********* previous song *********//
 prev.addEventListener("click", function () {
     index--;
     if (index < 0) index = songs.length - 1;
@@ -70,32 +68,29 @@ prev.addEventListener("click", function () {
     audio.play();
 });
 
-//progress bar
+//********* Time in minutes and seconds *********//
+function formatTime(time) {
+    let min = Math.floor(time / 60);
+    let sec = Math.floor(time % 60);
+    if(sec <= 9) sec = "0" + sec;
+    return `${min}:${sec}`;
+}
+
+//********* progress bar *********//
 audio.addEventListener("timeupdate", function () {
     if (dragging) return;
-
     let progressValue = (audio.currentTime / audio.duration) * 100;
-
-    //current Time in minutes and seconds
-    let currMin = Math.floor(audio.currentTime / 60);
-    let currSec = Math.floor(audio.currentTime % 60);
-    if (currSec <= 9) currSec = "0" + currSec;
-    current.innerText = `${currMin}:${currSec}`;
-
+    current.innerText = formatTime(audio.currentTime);
     progress.style.width = progressValue + "%";
 });
 
 audio.addEventListener("loadedmetadata", function () {
     progress.style.width = "0%";
 
-    //Final Time in minutes and seconds
-    let finalMin = Math.floor(audio.duration / 60);
-    let finalSec = Math.floor(audio.duration % 60);
-    if (finalSec <= 9) finalSec = "0" + finalSec;
-    final.innerText = `${finalMin}:${finalSec}`;
+    final.innerText = formatTime(audio.duration);
 });
 
-//*******Shuffle logic********//
+//******* Shuffle logic ********//
 let shuffleMode = 0;
 shuffle.addEventListener("click", function () {
     if (shuffleMode === 0) {
@@ -107,7 +102,7 @@ shuffle.addEventListener("click", function () {
     shuffleMode === 0 ? shuffleMode = 1 : shuffleMode = 0;
 });
 
-//*******Repeat logic********//
+//******* Repeat logic ********//
 let repeatMode = 0;
 repeat.addEventListener("click", function () {
     repeatMode++;
@@ -125,7 +120,7 @@ repeat.addEventListener("click", function () {
     }
 });
 
-//********Active Shuffle & Repeat*********//
+//******** Active Shuffle & Repeat *********//
 audio.addEventListener("ended", function () {
     if (shuffleMode === 1 && repeatMode != 2) {
         let randomIndex;
@@ -174,9 +169,8 @@ slide.addEventListener("click", function (val) {
 //********* Slide to Seek **********//
 let dragging = false;
 let seekTime = 0;
-slide.addEventListener("pointerdown", function (e) {
+slide.addEventListener("pointerdown", function () {
     dragging = true;
-    slide.setPointerCapture(e.pointerId);
     thumb.classList.add("active");
 });
 
@@ -189,6 +183,8 @@ document.addEventListener("pointermove", function (val) {
     progressValue = Math.min(100, progressValue);
     progress.style.width = progressValue + "%";
     seekTime = (progressValue / 100) * audio.duration;
+
+    current.innerText = formatTime(seekTime);
 });
 
 document.addEventListener("pointerup", function (val) {
@@ -198,7 +194,6 @@ document.addEventListener("pointerup", function (val) {
     dragging = false;
     thumb.classList.remove("active");
 });
-
 
 
 
